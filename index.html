@@ -3,44 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voxel Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .input-mesh {
-            position: relative; 
-            left: 36%;
-        }
-        .video-container {
-            display: grid;
-            margin: 0 auto;
-            position: relative;
-        }
-        .radio-container {
-            width: 18px;
-            height: 18px;
-        }
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 20px;
-        }
-        .navigation-buttons button {
-            background-color: black;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            cursor: pointer;
-        }
-    </style>
+    <title>User Study</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="video-container">
@@ -50,52 +14,11 @@
     <form>
     <fieldset id="question" style="width:600px;">
         <legend><b id="text_prompt"></b></legend>
-        <p>Q1. Which voxel art version best preserves the original 3D shape and structure of the object?</p>
-        <div>
-            <input type="radio" id="q1v1" name="Q1" value="1" class="radio-container"/>
-            <label for="q1v1">1</label>
-        
-            <input type="radio" id="q1v2" name="Q1" value="2" class="radio-container"/>
-            <label for="q1v2">2</label>
-
-            <input type="radio" id="q1v3" name="Q1" value="3" class="radio-container"/>
-            <label for="q1v3">3</label>
-        
-            <input type="radio" id="q1v4" name="Q1" value="4" class="radio-container"/>
-            <label for="q1v4">4</label>
-        </div>
-        <p>Q2. Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?</p>
-        <div>
-            <input type="radio" id="q2v1" name="Q2" value="1" class="radio-container"/>
-            <label for="q2v1">1</label>
-        
-            <input type="radio" id="q2v2" name="Q2" value="2" class="radio-container"/>
-            <label for="q2v2">2</label>
-
-            <input type="radio" id="q2v3" name="Q2" value="3" class="radio-container"/>
-            <label for="q2v3">3</label>
-        
-            <input type="radio" id="q2v4" name="Q2" value="4" class="radio-container"/>
-            <label for="q2v4">4</label>
-        </div>
-        <p>Q3. Which voxel art version looks the most visually appealing overall, considering balance, harmony, and artistic quality?</p>
-        <div>
-            <input type="radio" id="q3v1" name="Q3" value="1" class="radio-container"/>
-            <label for="q3v1">1</label>
-        
-            <input type="radio" id="q3v2" name="Q3" value="2" class="radio-container"/>
-            <label for="q3v2">2</label>
-
-            <input type="radio" id="q3v3" name="Q3" value="3" class="radio-container"/>
-            <label for="q3v3">3</label>
-        
-            <input type="radio" id="q3v4" name="Q3" value="4" class="radio-container"/>
-            <label for="q3v4">4</label>
-        </div>
+        <div id="questions"></div>
     </fieldset>
     </form>
 
-    <div class="navigation-buttons">
+    <div class="navigation-container">
         <button id="prev_button" onclick="prevPage()">PREV</button>
         <p id="num_page"></p>
         <button id="next_button" onclick="nextPage()">NEXT</button>
@@ -109,234 +32,69 @@
     <script src="vendor/select2/select2.min.js"></script>
     <script src="vendor/daterangepicker/moment.min.js"></script>
     <script src="vendor/daterangepicker/daterangepicker.js"></script>
+    <script src="index.js"></script>
     <script>
-        images_list = [
+        now = 0
+
+        questions = [
+            "Which video demonstrates better consistency between frames, with fewer flickering artifacts, disappearing objects, or sudden changes in geometry or texture?",
+            "Which video's 3D structures (buildings, terrain, objects) more accurately represent the real-world geometry when compared to the ground truth video?",
+            "Which video's layout and positioning of elements better matches the satellite imagery reference?",
+            "Considering all aspects (geometry, textures, lighting, consistency), which video presents a more convincing and high-quality 3D representation of the scene?"
+        ]
+        num_of_questions = questions.length
+        
+        form_url = "https://docs.google.com/forms/d/1sWq3YiTtqRGr_rn6tYrzYZBSBEPadStHmRY6MGzGcm8/formResponse?"
+
+        username_entry = "entry.1926733457"
+        entry_list = [
+            ["entry.2125490581", "entry.2080099033", "entry.787853927", "entry.181565463"],
+            ["entry.1372537838", "entry.472180442", "entry.189779099", "entry.1174997076"],
+            ["entry.879584889", "entry.1192493797", "entry.592744835", "entry.684333688"],
+            ["entry.1524869044", "entry.1553191529", "entry.442712978", "entry.2004775570"],
+        ]
+
+        data_list = [
             {
                 'username': ""
             },
         ]
 
-        
-        entry_list = [
-            ["entry.2125490581", "entry.2080099033", "entry.787853927"],
-            ["entry.1372537838", "entry.472180442", "entry.189779099"],
-            ["entry.879584889", "entry.1192493797", "entry.592744835"],
-            ["entry.1524869044", "entry.1553191529", "entry.442712978"],
-            ["entry.277023299", "entry.178317512", "entry.1638103689"],
-
-            ["entry.545691709", "entry.2122281902", "entry.1295635086"],
-            ["entry.1324347345", "entry.1468420399", "entry.1830225463"],
-            ["entry.1803416582", "entry.258372846", "entry.1641977658"],
-            ["entry.777412838", "entry.1188271433", "entry.723532485"],
-            ["entry.2051570683", "entry.81840528", "entry.1555251875"],
-
-            ["entry.2059414437", "entry.529442351", "entry.784480663"],
-            ["entry.1766930993", "entry.1316937407", "entry.380261123"],
-            ["entry.1489590171", "entry.1050781807", "entry.63644096"],
-            ["entry.1000678790", "entry.2121748361", "entry.1511438076"],
-            ["entry.500770907", "entry.922414313", "entry.1624512946"]
-        ]
-        
-        function prevPage() {
-            // Add functionality for previous page
-            console.log('Previous page');
-            changePage(now)
-            now -= 1;
-            renderImages(now);
-            resetRadioStatus(now);
-        }
-
-        function nextPage() {
-            // Add functionality for next page
-            console.log('Next page');
-            if (changePage(now)) {
-                if(now === images_list.length-1) {
-                    MySubmit = "https://docs.google.com/forms/d/e/1FAIpQLSfWXOhAPmCvcUwhaJXhL18-hLdbBnupLVpR0oyZ2kCi_WGtrA/formResponse?";
-                    MySubmit += "entry.1926733457=" + images_list[0]["username"] + "&";
-                    
-                    for(let i=1; i<images_list.length; i++) {
-                        MySubmit += entry_list[i-1][0] + "=" + images_list[i]["Q1"] + "&";
-                        MySubmit += entry_list[i-1][1] + "=" + images_list[i]["Q2"] + "&";
-                        MySubmit += entry_list[i-1][2] + "=" + images_list[i]["Q3"] + "&";
-                    }
-
-                    MySubmit += "submit=Submit";
-                    window.location.replace(MySubmit);
-                } else {
-                    now += 1;
-                    renderImages(now);
-                    resetRadioStatus(now);
-                }
-                
-            } else {
-                alert("Cannot be empty!!!!");
-            }
-        }
-
-        function changePage(now) {
-            if (now == 0) {
-                username = document.getElementById("username");
-                if (username.value == "") {
-                    return false;
-                }
-                images_list[0]['username'] = username.value;
-                console.log(images_list[0]['username'])
-                return true;
-            }
-
-            let q1 = document.querySelector('input[name="Q1"]:checked');   
-            let q2 = document.querySelector('input[name="Q2"]:checked');   
-            let q3 = document.querySelector('input[name="Q3"]:checked'); 
-
-            if (q1!=null && q2!=null && q3!=null) {
-                images_list[now]['Q1'] = images_list[now]['voxel'][parseInt(q1.value)-1]['value']
-                images_list[now]['Q2'] = images_list[now]['voxel'][parseInt(q2.value)-1]['value']
-                images_list[now]['Q3'] = images_list[now]['voxel'][parseInt(q3.value)-1]['value']
-                return true
-            } else {
-                return false
-            }
-
-            console.log(now, q1, q2, q3)
-        }
-
-        function resetRadioStatus(now) {
-            let q1 = document.querySelector( 'input[name="Q1"]:checked');   
-            let q2 = document.querySelector( 'input[name="Q2"]:checked');   
-            let q3 = document.querySelector( 'input[name="Q3"]:checked');
-
-            for(let q=1; q<=3; q++) {
-                document.getElementById(`q${q}v1`).checked = false;
-                document.getElementById(`q${q}v2`).checked = false;
-                document.getElementById(`q${q}v3`).checked = false;
-                document.getElementById(`q${q}v4`).checked = false;
-
-                console.log(images_list[now][`Q${q}`]);
-                if(images_list[now][`Q${q}`] === images_list[now]['voxel'][0]['value']) {
-                    document.getElementById(`q${q}v1`).checked = true;
-                } else if (images_list[now][`Q${q}`] === images_list[now]['voxel'][1]['value']) {
-                    document.getElementById(`q${q}v2`).checked = true;
-                } else if (images_list[now][`Q${q}`] === images_list[now]['voxel'][2]['value']) {
-                    document.getElementById(`q${q}v3`).checked = true;
-                } else if (images_list[now][`Q${q}`] === images_list[now]['voxel'][3]['value']) {
-                    document.getElementById(`q${q}v4`).checked = true;
-                }
-            }
-        }
-
-        function renderImages(now) {
-            if(now == 0) {
-                let txt = `
-                    <br><br><br><br><br><br>
-                    <h1>User Study</h1>
-                    <form style="text-align: center;" align=“center”>
-                        <fieldset>
-                            <legend>Username</legend>
-                            <input type="text" id="username" value="">
-                        </fieldset>
-                    </form>
-                `;
-                document.getElementById("images").innerHTML = txt;
-            } else {
-                let txt = `
-                    <div>
-                        <label for="${images_list[now]["name"]}">
-                            <span class="input-mesh">Input Mesh</span>
-                            <img class="input-mesh" src="${images_list[now]['input_mesh']}" width="200"/>
-                        </label>
-                        <div>
-                            <span>Voxel 1</span>
-                            <img src="${images_list[now]['voxel'][0]['url']}" width="200"/>
-                            <span>Voxel 2</span>
-                            <img src="${images_list[now]['voxel'][1]['url']}" width="200"/>
-                            <span>Voxel 3</span>
-                            <img src="${images_list[now]['voxel'][2]['url']}" width="200"/>
-                            <span>Voxel 4</span>
-                            <img src="${images_list[now]['voxel'][3]['url']}" width="200"/>
-                        </div>
-                    </div>
-                `;
-                // <span>Voxel 1</span>
-                            // <img src="${images_list[now]['voxel'][0]['url']}" width="256"/>
-                            // <span>Voxel 2</span>
-                            // <img src="${images_list[now]['voxel'][1]['url']}" width="256"/>
-                            // <span>Voxel 3</span>
-                            // <img src="${images_list[now]['voxel'][2]['url']}" width="256"/>
-                            // <span>Voxel 4</span>
-                            // <img src="${images_list[now]['voxel'][3]['url']}" width="256"/>
-                document.getElementById("text_prompt").innerHTML = `Questions`
-                document.getElementById("images").innerHTML = txt;
-                document.getElementById("num_page").innerHTML = `${now}/${images_list.length-1}`;
-            }
-            if(now == 0) {
-                document.getElementById("question").style.visibility="hidden";
-            } else {
-                document.getElementById("question").style.visibility="visible";
-            }
-
-            if(now == 0 || now == 1) {
-                document.getElementById("prev_button").style.visibility="hidden";
-            } else {
-                document.getElementById("prev_button").style.visibility="visible";
-            }
-
-            if(now == images_list.length-1) {
-                document.getElementById("next_button").innerHTML = `SUBMIT`;
-            } else {
-                document.getElementById("next_button").innerHTML = `NEXT`;
-            }
-        }
-
-        function shuffle(array) {
-            let currentIndex = array.length;
-
-            // While there remain elements to shuffle...
-            while (currentIndex != 0) {
-
-                // Pick a remaining element...
-                let randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-
-                // And swap it with the current element.
-                [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex], array[currentIndex]];
-            }
-        }
-        
-        now = 0
-
-        for(let i=1; i<16; i++) {
-            images_list.push({
+        input_title = "Ground Truth"
+        obj_title = "Video"
+        obj_width = 256
+        element_type = "video" // video / image
+        for(let i=1; i<=4; i++) {
+            data_list.push({
                 "name": `${i}`,
-                "input_mesh": `imgs/${i}/original.jpeg`,
-                "voxel": [
+                "input": `data/${i}/input.png`,
+                "ground_truth": `data/${i}/GT.mp4`,
+                "data": [
                     {
-                        "url": `imgs/${i}/nn.jpeg`,
-                        "value": "nn"
+                        "url": `data/${i}/sat-nerf.mp4`,
+                        "value": "sat-nerf"
                     },
                     {
-                        "url": `imgs/${i}/dvgo.jpeg`,
-                        "value": "dvgo"
+                        "url": `data/${i}/ours_pre.mp4`,
+                        "value": "ours_pre"
                     },
                     {
-                        "url": `imgs/${i}/dvgo_nn.jpeg`,
-                        "value": "dvgo_nn"
-                    },
-                    {
-                        "url": `imgs/${i}/ours.jpeg`,
+                        "url": `data/${i}/ours.mp4`,
                         "value": "ours"
                     },
                 ],
                 "Q1": null,
                 "Q2": null,
                 "Q3": null,
+                "Q4": null,
             })
         }
+        num_of_selection = data_list[1]['data'].length
 
-        for(let i=1; i<images_list.length; i++) {
-            shuffle(images_list[i]['voxel']);
+        for(let i=1; i<data_list.length; i++) {
+            shuffle(data_list[i]['data']);
         }
-        renderImages(now);
+        renderObjects(now);
 
         $(document).ready(function(){
             $('#username').keypress(function(e){
@@ -345,6 +103,7 @@
                 }
             });
         });
+
     </script>
 </body>
 </html>
