@@ -177,7 +177,7 @@ function renderQuestions() {
 
     for(let q = 1; q <= num_of_questions; q++) {
         txt += `
-        <p>Q${q}. <b>${questions_title[q-1]}</b>: ${questions[q-1]}</p>
+        <p>Q${q}. <b>${questions_title[q-1]}</b>: "${questions[q-1]}"</p>
         <div>`
 
         for(let v = 1; v <= num_of_selection; v++){
