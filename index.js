@@ -131,7 +131,7 @@ function renderObjects(now) {
                     <div class="video-row">
                         <div class="input-object">
                             ${generateElements(data_list[now]['input'], obj_width, "image")}
-                            <div class="titles">Input Image</div>
+                            <div class="titles">Satellite Imagery Reference</div>
                         </div>
                         <div class="input-object">
                             <video height="256" controls loop autoplay>
@@ -140,6 +140,7 @@ function renderObjects(now) {
                             <div class="titles">${input_title}</div>
                         </div>
                     </div>
+                    <br/>
                 </label>
                 <div class="video-row">
                     ${imgs_element}
@@ -176,7 +177,7 @@ function renderQuestions() {
 
     for(let q = 1; q <= num_of_questions; q++) {
         txt += `
-        <p>Q${q}. ${questions[q-1]}</p>
+        <p>Q${q}. <b>${questions_title[q-1]}</b>: ${questions[q-1]}</p>
         <div>`
 
         for(let v = 1; v <= num_of_selection; v++){
