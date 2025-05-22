@@ -36,28 +36,41 @@
     <script>
         now = 0
 
-        questions_title = [
-            // "Temporal Consistency",
-            "Geometric Accuracy",
-            "Spatial Alignment",
-            "Overall Perceptual Quality"
-        ]
         questions = [
-            // "Which video demonstrates better consistency between frames, with fewer flickering artifacts, disappearing objects, or sudden changes in geometry or texture?",
-            "Which video's 3D structures (buildings, terrain, objects) more accurately represent the real-world geometry when compared to the ground truth video?",
-            "Which video's layout and positioning of elements better matches the satellite imagery reference?",
-            "Considering all aspects (geometry, textures, lighting, consistency), which video presents a more convincing and high-quality 3D representation of the scene?"
+            "Which voxel art version best preserves the original 3D shape and structure of the object?",
+            "Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?",
+            "Which voxel art version looks the most visually appealing overall, considering balance, harmony, and artistic quality?"
+        ]
+
+        gray_questions = [
+            "Which voxel art version best preserves the original 3D shape and structure of the object?",
+            "Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?",
+            "Which voxel art version looks the most visually appealing overall, considering balance, harmony, and artistic quality?",
+            "Which one of grayscale voxel shape more closely resembles the original 3D mesh in terms of overall geometry?"
         ]
         num_of_questions = questions.length
         
-        form_url = "https://docs.google.com/forms/d/1sWq3YiTtqRGr_rn6tYrzYZBSBEPadStHmRY6MGzGcm8/formResponse?"
+        form_url = "https://docs.google.com/forms/d/1F9-Li-z43Kykk7uPL_U4KoBQKSJxeBvLsUNQX4--YJ8/formResponse?"
 
         username_entry = "entry.1926733457"
         entry_list = [
-            ["entry.2125490581", "entry.2080099033", "entry.787853927", "entry.181565463"],
-            ["entry.1372537838", "entry.472180442", "entry.189779099", "entry.1174997076"],
-            ["entry.879584889", "entry.1192493797", "entry.592744835", "entry.684333688"],
-            ["entry.1524869044", "entry.1553191529", "entry.442712978", "entry.2004775570"],
+            ["entry.2125490581", "entry.2080099033", "entry.787853927"],
+            ["entry.1372537838", "entry.472180442", "entry.189779099"],
+            ["entry.879584889", "entry.1192493797", "entry.592744835"],
+            ["entry.1524869044", "entry.1553191529", "entry.442712978"],
+            ["entry.277023299", "entry.178317512", "entry.1638103689"],
+
+            ["entry.545691709", "entry.2122281902", "entry.1295635086"],
+            ["entry.1324347345", "entry.1468420399", "entry.1830225463"],
+            ["entry.1803416582", "entry.258372846", "entry.1641977658"],
+            ["entry.777412838", "entry.1188271433", "entry.723532485", "entry.1427760830"],
+            ["entry.2051570683", "entry.81840528", "entry.1555251875", "entry.1964434700"],
+
+            ["entry.2059414437", "entry.529442351", "entry.784480663", "entry.286718203"],
+            ["entry.1766930993", "entry.1316937407", "entry.380261123", "entry.556880922"],
+            // ["entry.1489590171", "entry.1050781807", "entry.63644096"],
+            // ["entry.1000678790", "entry.2121748361", "entry.1511438076"],
+            // ["entry.500770907", "entry.922414313", "entry.1624512946"]
         ]
 
         data_list = [
@@ -66,34 +79,56 @@
             },
         ]
 
-        input_title = "Ground Truth"
-        obj_title = "Video"
-        obj_width = 256
-        element_type = "video" // video / image
-        for(let i=1; i<=4; i++) {
-            data_list.push({
-                "name": `${i}`,
-                "input": `data/${i}/input.png`,
-                "ground_truth": `data/${i}/GT.mp4`,
-                "data": [
-                    {
-                        "url": `data/${i}/sat-nerf.mp4`,
-                        "value": "sat-nerf"
-                    },
-                    {
-                        "url": `data/${i}/ours_pre.mp4`,
-                        "value": "ours_pre"
-                    },
-                    {
-                        "url": `data/${i}/ours.mp4`,
-                        "value": "ours"
-                    },
-                ],
-                "Q1": null,
-                "Q2": null,
-                "Q3": null,
-                "Q4": null,
-            })
+        input_title = "Input Object"
+        obj_title = "Voxel"
+        obj_width = 160
+        element_type = "image" // video / image
+        for(let i=1; i<=12; i++) {
+            if(i>=9 && i<=12) {
+                data_list.push({
+                    "name": `${i}`,
+                    "input": `data/${i}/input.png`,
+                    "data": [
+                        {
+                            "url": `data/${i}/blender.png`,
+                            "value": "blender"
+                        },
+                        {
+                            "url": `data/${i}/ours.png`,
+                            "value": "ours"
+                        },
+                    ],
+                    "Q1": null,
+                    "Q2": null,
+                    "Q3": null,
+                })
+            } else {
+                data_list.push({
+                    "name": `${i}`,
+                    "input": `data/${i}/input.png`,
+                    "data": [
+                        {
+                            "url": `data/${i}/blender.png`,
+                            "value": "blender"
+                        },
+                        {
+                            "url": `data/${i}/in2n.png`,
+                            "value": "in2n"
+                        },
+                        {
+                            "url": `data/${i}/voxe.png`,
+                            "value": "voxe"
+                        },
+                        {
+                            "url": `data/${i}/ours.png`,
+                            "value": "ours"
+                        },
+                    ],
+                    "Q1": null,
+                    "Q2": null,
+                    "Q3": null,
+                })
+            }
         }
         num_of_selection = data_list[1]['data'].length
 
@@ -111,5 +146,6 @@
         });
 
     </script>
+    <script type="text/javascript">prohibitpreviouspage();</script>
 </body>
 </html>

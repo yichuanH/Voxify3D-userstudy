@@ -16,9 +16,15 @@ function nextPage() {
             MySubmit += `${username_entry}=` + data_list[0]["username"] + "&";
             
             for(let i=1; i<data_list.length; i++) {
-                for(let q = 1; q <= num_of_questions; q++) {
-                    MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
-                };
+                if(i>=9 && i<=12) {
+                    for(let q = 1; q <= gray_questions.length; q++) {
+                        MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
+                    };
+                } else {
+                    for(let q = 1; q <= questions.length; q++) {
+                        MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
+                    };
+                }
             }
 
             MySubmit += "submit=Submit";
@@ -47,12 +53,23 @@ function changePage(now) {
 
     let query_checked = true
 
-    for(let q = 1; q <= num_of_questions; q++) {
-        let query = document.querySelector(`input[name="Q${q}"]:checked`);
-        if (query == null) {
-            query_checked = false;
-        } else {
-            data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
+    if(now>=9 && now<=12) {
+        for(let q = 1; q <= gray_questions.length; q++) {
+            let query = document.querySelector(`input[name="Q${q}"]:checked`);
+            if (query == null) {
+                query_checked = false;
+            } else {
+                data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
+            }
+        };
+    } else {
+        for(let q = 1; q <= questions.length; q++) {
+            let query = document.querySelector(`input[name="Q${q}"]:checked`);
+            if (query == null) {
+                query_checked = false;
+            } else {
+                data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
+            }
         }
     }
 
@@ -60,15 +77,30 @@ function changePage(now) {
 }
 
 function resetRadioStatus(now) {
-    for(let q = 1; q <= num_of_questions; q++) {
-        for(let v = 1; v <= num_of_selection; v++) {
-            document.getElementById(`q${q}v${v}`).checked = false;
-        }
-
-        for(let v = 1; v <= num_of_selection; v++) {
-            if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
-                document.getElementById(`q${q}v${v}`).checked = true;
-                break;
+    if(now>=9 && now<=12) {
+        for(let q = 1; q <= gray_questions.length; q++) {
+            for(let v = 1; v <= data_list[now]['data'].length; v++) {
+                document.getElementById(`q${q}v${v}`).checked = false;
+            }
+    
+            for(let v = 1; v <= data_list[now]['data'].length; v++) {
+                if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
+                    document.getElementById(`q${q}v${v}`).checked = true;
+                    break;
+                }
+            }
+        };
+    } else {
+        for(let q = 1; q <= questions.length; q++) {
+            for(let v = 1; v <= data_list[now]['data'].length; v++) {
+                document.getElementById(`q${q}v${v}`).checked = false;
+            }
+    
+            for(let v = 1; v <= data_list[now]['data'].length; v++) {
+                if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
+                    document.getElementById(`q${q}v${v}`).checked = true;
+                    break;
+                }
             }
         }
     }
@@ -116,10 +148,10 @@ function renderObjects(now) {
         document.getElementById("images").innerHTML = txt;
     } else {
         let imgs_element = ""
-        for(let i = 1; i <= num_of_selection; i++){
+        for(let i = 1; i <= data_list[now]['data'].length; i++){
             imgs_element += `
                 <div class="input-object">
-                    ${generateElements(data_list[now]['data'][i-1]['url'], 300, element_type)}
+                    ${generateElements(data_list[now]['data'][i-1]['url'], obj_width, element_type)}
                     <div class="titles">${obj_title} ${i}</div>
                 </div>
             `
@@ -128,19 +160,10 @@ function renderObjects(now) {
         let txt = `
             <div>
                 <label for="${data_list[now]["name"]}">
-                    <div class="video-row">
-                        <div class="input-object">
-                            ${generateElements(data_list[now]['input'], obj_width, "image")}
-                            <div class="titles">Satellite Imagery Reference</div>
-                        </div>
-                        <div class="input-object">
-                            <video height="256" controls loop autoplay>
-                                <source src="${data_list[now]['ground_truth']}" type="video/mp4" />
-                            </video>
-                            <div class="titles">${input_title}</div>
-                        </div>
+                    <div class="input-object">
+                        ${generateElements(data_list[now]['input'], obj_width, element_type)}
+                        <div class="titles">${input_title}</div>
                     </div>
-                    <br/>
                 </label>
                 <div class="video-row">
                     ${imgs_element}
@@ -175,21 +198,65 @@ function renderObjects(now) {
 function renderQuestions() {
     let txt = ""
 
-    for(let q = 1; q <= num_of_questions; q++) {
-        txt += `
-        <p>Q${q}. <b>${questions_title[q-1]}</b>: "${questions[q-1]}"</p>
-        <div>`
+    if(now>=9 && now<=12) {
+        for(let q = 1; q <= gray_questions.length; q++) {
+            txt += `
+            <p>Q${q}. ${gray_questions[q-1]}</p>
+            <div>`
 
-        for(let v = 1; v <= num_of_selection; v++){
+            for(let v = 1; v <= data_list[now]['data'].length; v++){
+                txt +=`
+                    <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
+                    <label for="q${q}v${v}">${v}</label>
+                `
+            } 
+
             txt +=`
-                <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
-                <label for="q${q}v${v}">${v}</label>
+            </div>
             `
-        } 
+            document.getElementById("questions").innerHTML = txt
+        };
+    } else {
+        for(let q = 1; q <= questions.length; q++) {
+            txt += `
+            <p>Q${q}. ${questions[q-1]}</p>
+            <div>`
 
-        txt +=`
-        </div>
-        `
-        document.getElementById("questions").innerHTML = txt
+            for(let v = 1; v <= data_list[now]['data'].length; v++){
+                txt +=`
+                    <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
+                    <label for="q${q}v${v}">${v}</label>
+                `
+            } 
+
+            txt +=`
+            </div>
+            `
+            document.getElementById("questions").innerHTML = txt
+        }
     }
+}
+
+function prohibitpreviouspage(){
+
+    if(navigator.userAgent.indexOf('Firefox') != -1 && parseFloat(navigator.userAgent.substring(navigator.userAgent.indexOf('Firefox') + 8)) >= 3.6 ){
+        //Firefox
+        setTimeout("fn_forward()",1);
+        window.history.go(1);
+    } else if (
+        navigator.userAgent.indexOf('Safari') !== -1 &&
+        navigator.userAgent.indexOf('Chrome') === -1 &&
+        navigator.userAgent.indexOf('Chromium') === -1
+    ) {
+        // Safari
+        setTimeout("fn_forward()", 1);
+        window.history.forward();
+    } else { //IE.Chrome.Edge
+        window.history.forward();
+    }
+}
+
+function fn_forward() {
+    history.forward();
+    setTimeout("fn_forward()",1);
 }
