@@ -11,17 +11,19 @@
         <div id="images"></div>
     </div>
     <br>
-    <form>
-    <fieldset id="question" style="width:600px;">
-        <legend><b id="text_prompt"></b></legend>
-        <div id="questions"></div>
-    </fieldset>
-    </form>
+    <div style="position: relative;display: inline-block;">
+        <form>
+        <fieldset id="question" style="width:600px;">
+            <legend><b><font size="4" face="Comic Sans MS" id="text_prompt"></font></b></legend>
+            <div id="questions"></div>
+        </fieldset>
+        </form>
 
-    <div class="navigation-container">
-        <button id="prev_button" onclick="prevPage()">PREV</button>
-        <p id="num_page"></p>
-        <button id="next_button" onclick="nextPage()">NEXT</button>
+        <div class="navigation-container">
+            <button id="prev_button" onclick="prevPage()">PREV</button>
+            <p id="num_page"></p>
+            <button id="next_button" onclick="nextPage()">NEXT</button>
+        </div>
     </div>
 
 
@@ -40,10 +42,6 @@
             "Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?",
             "Which version looks most visually appealing as a voxel art character, like something you might see in Minecraft or a stylized game?"
         ]
-
-        gray_questions = [
-            "Which one of grayscale voxel shape more closely resembles the original 3D mesh in terms of overall geometry?"
-        ]
         num_of_questions = questions.length
         
         form_url = "https://docs.google.com/forms/d/1F9-Li-z43Kykk7uPL_U4KoBQKSJxeBvLsUNQX4--YJ8/formResponse?"
@@ -59,11 +57,33 @@
             ["entry.545691709", "entry.2122281902"],
             ["entry.1324347345", "entry.1468420399"],
             ["entry.1803416582", "entry.258372846"],
-            ["entry.777412838"],
-            ["entry.2051570683"],
+            ["entry.777412838", "entry.59955615"],
+            ["entry.2051570683", "entry.1996689856"],
 
-            ["entry.2059414437"],
-            ["entry.1766930993"],
+            ["entry.2133676184", "entry.955208890"],
+            ["entry.1766930993", "entry.65481457"],
+            ["entry.2146775832", "entry.812424855"],
+            ["entry.280368547", "entry.910904533"],
+            ["entry.793893094", "entry.2076724073"],
+
+            ["entry.126578552", "entry.378206762"],
+            ["entry.1782458395", "entry.3838315"],
+            ["entry.671283456", "entry.1649809104"],
+            ["entry.921939832", "entry.456987409"],
+            ["entry.2124992845", "entry.164383548"],
+
+            ["entry.460258273", "entry.1481215830"],
+            ["entry.1304365754", "entry.1108937229"],
+            ["entry.1717149641", "entry.1422318090"],
+            ["entry.45496290", "entry.1765172097"],
+            ["entry.1881969669", "entry.1858027944"],
+            
+            ["entry.548360291", "entry.47337527"],
+            ["entry.1161446232", "entry.2055038896"],
+            ["entry.2125445030", "entry.1409270125"],
+            ["entry.30140000", "entry.902669447"],
+            ["entry.1410083225", "entry.438069592"]
+
         ]
 
         data_list = [
@@ -76,52 +96,32 @@
         obj_title = "Voxel"
         obj_width = 160
         element_type = "image" // video / image
-        for(let i=1; i<=12; i++) {
-            if(i>=9 && i<=12) {
-                data_list.push({
-                    "name": `${i}`,
-                    "input": `data/${i}/input.png`,
-                    "data": [
-                        {
-                            "url": `data/${i}/blender.png`,
-                            "value": "blender"
-                        },
-                        {
-                            "url": `data/${i}/ours.png`,
-                            "value": "ours"
-                        },
-                    ],
-                    "Q1": null,
-                    "Q2": null,
-                    "Q3": null,
-                })
-            } else {
-                data_list.push({
-                    "name": `${i}`,
-                    "input": `data/${i}/input.png`,
-                    "data": [
-                        {
-                            "url": `data/${i}/blender.png`,
-                            "value": "blender"
-                        },
-                        {
-                            "url": `data/${i}/in2n.png`,
-                            "value": "in2n"
-                        },
-                        {
-                            "url": `data/${i}/voxe.png`,
-                            "value": "voxe"
-                        },
-                        {
-                            "url": `data/${i}/ours.png`,
-                            "value": "ours"
-                        },
-                    ],
-                    "Q1": null,
-                    "Q2": null,
-                    "Q3": null,
-                })
-            }
+        for(let i=1; i<=30; i++) {
+            
+            data_list.push({
+                "name": `${i}`,
+                "input": `data/${i}/input.png`,
+                "data": [
+                    {
+                        "url": `data/${i}/blen.png`,
+                        "value": "blen"
+                    },
+                    {
+                        "url": `data/${i}/in2n.png`,
+                        "value": "in2n"
+                    },
+                    {
+                        "url": `data/${i}/voxe.png`,
+                        "value": "voxe"
+                    },
+                    {
+                        "url": `data/${i}/ours.png`,
+                        "value": "ours"
+                    },
+                ],
+                "Q1": null,
+                "Q2": null,
+            })
         }
         num_of_selection = data_list[1]['data'].length
 

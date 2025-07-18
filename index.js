@@ -16,15 +16,9 @@ function nextPage() {
             MySubmit += `${username_entry}=` + data_list[0]["username"] + "&";
             
             for(let i=1; i<data_list.length; i++) {
-                if(i>=9 && i<=12) {
-                    for(let q = 1; q <= gray_questions.length; q++) {
-                        MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
-                    };
-                } else {
-                    for(let q = 1; q <= questions.length; q++) {
-                        MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
-                    };
-                }
+                for(let q = 1; q <= questions.length; q++) {
+                    MySubmit += entry_list[i-1][q-1] + "=" + data_list[i][`Q${q}`] + "&";
+                };
             }
 
             MySubmit += "submit=Submit";
@@ -53,23 +47,13 @@ function changePage(now) {
 
     let query_checked = true
 
-    if(now>=9 && now<=12) {
-        for(let q = 1; q <= gray_questions.length; q++) {
-            let query = document.querySelector(`input[name="Q${q}"]:checked`);
-            if (query == null) {
-                query_checked = false;
-            } else {
-                data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
-            }
-        };
-    } else {
-        for(let q = 1; q <= questions.length; q++) {
-            let query = document.querySelector(`input[name="Q${q}"]:checked`);
-            if (query == null) {
-                query_checked = false;
-            } else {
-                data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
-            }
+
+    for(let q = 1; q <= questions.length; q++) {
+        let query = document.querySelector(`input[name="Q${q}"]:checked`);
+        if (query == null) {
+            query_checked = false;
+        } else {
+            data_list[now][`Q${q}`] = data_list[now]['data'][parseInt(query.value)-1]['value'] 
         }
     }
 
@@ -77,30 +61,16 @@ function changePage(now) {
 }
 
 function resetRadioStatus(now) {
-    if(now>=9 && now<=12) {
-        for(let q = 1; q <= gray_questions.length; q++) {
-            for(let v = 1; v <= data_list[now]['data'].length; v++) {
-                document.getElementById(`q${q}v${v}`).checked = false;
-            }
-    
-            for(let v = 1; v <= data_list[now]['data'].length; v++) {
-                if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
-                    document.getElementById(`q${q}v${v}`).checked = true;
-                    break;
-                }
-            }
-        };
-    } else {
-        for(let q = 1; q <= questions.length; q++) {
-            for(let v = 1; v <= data_list[now]['data'].length; v++) {
-                document.getElementById(`q${q}v${v}`).checked = false;
-            }
-    
-            for(let v = 1; v <= data_list[now]['data'].length; v++) {
-                if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
-                    document.getElementById(`q${q}v${v}`).checked = true;
-                    break;
-                }
+
+    for(let q = 1; q <= questions.length; q++) {
+        for(let v = 1; v <= data_list[now]['data'].length; v++) {
+            document.getElementById(`q${q}v${v}`).checked = false;
+        }
+
+        for(let v = 1; v <= data_list[now]['data'].length; v++) {
+            if(data_list[now][`Q${q}`] === data_list[now]['data'][v-1]['value']) {
+                document.getElementById(`q${q}v${v}`).checked = true;
+                break;
             }
         }
     }
@@ -136,23 +106,29 @@ function generateElements(data, width, type) {
 function renderObjects(now) {
     if(now == 0) {
         let txt = `
-            <br><br><br><br><br><br>
-            <h1>User Study</h1>
-            <form style="text-align: center;" align=“center”>
-                <fieldset>
-                    <legend>Username</legend>
-                    <input type="text" id="username" value="">
+            <br/><br/><br/><br/><br/><br/>
+            <h1><font face="Comic Sans MS">User Study</font></h1>
+        `
+
+        document.getElementById("images").innerHTML = txt;
+
+        txt = `
+            <form style="display: flex; justify-content: center; margin-bottom: 20px; width: 100%;">
+                <fieldset style="width: 100%; max-width: 600px; padding: 20px; border: 1px solid black; box-sizing: border-box;">
+                    <legend style="font-size:20px;"><b><font face="Comic Sans MS">Username</font></b></legend>
+                    <input type="text" id="username" value="" style="width: 100%; padding: 10px; font-size: 16px; box-sizing: border-box;">
                 </fieldset>
             </form>
+
         `;
-        document.getElementById("images").innerHTML = txt;
+        document.getElementById("questions").innerHTML = txt;
     } else {
         let imgs_element = ""
         for(let i = 1; i <= data_list[now]['data'].length; i++){
             imgs_element += `
                 <div class="input-object">
                     ${generateElements(data_list[now]['data'][i-1]['url'], obj_width, element_type)}
-                    <div class="titles">${obj_title} ${i}</div>
+                    <div class="titles"><font face="Comic Sans MS">${obj_title} ${i}</font></div>
                 </div>
             `
         }
@@ -162,7 +138,7 @@ function renderObjects(now) {
                 <label for="${data_list[now]["name"]}">
                     <div class="input-object">
                         ${generateElements(data_list[now]['input'], obj_width, element_type)}
-                        <div class="titles">${input_title}</div>
+                        <div class="titles"><font face="Comic Sans MS">${input_title}</font></div>
                     </div>
                 </label>
                 <div class="video-row">
@@ -176,11 +152,11 @@ function renderObjects(now) {
         renderQuestions();
         document.getElementById("num_page").innerHTML = `${now}/${data_list.length-1}`;
     }
-    if(now == 0) {
-        document.getElementById("question").style.visibility="hidden";
-    } else {
-        document.getElementById("question").style.visibility="visible";
-    }
+    // if(now == 0) {
+    //     document.getElementById("question").style.visibility="hidden";
+    // } else {
+    //     document.getElementById("question").style.visibility="visible";
+    // }
 
     if(now == 0 || now == 1) {
         document.getElementById("prev_button").style.visibility="hidden";
@@ -198,42 +174,23 @@ function renderObjects(now) {
 function renderQuestions() {
     let txt = ""
 
-    if(now>=9 && now<=12) {
-        for(let q = 1; q <= gray_questions.length; q++) {
-            txt += `
-            <p>Q${q}. ${gray_questions[q-1]}</p>
-            <div>`
+    for(let q = 1; q <= questions.length; q++) {
+        txt += `
+        <p>Q${q}. ${questions[q-1]}</p>
+        <div class="check-group">`
 
-            for(let v = 1; v <= data_list[now]['data'].length; v++){
-                txt +=`
-                    <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
-                    <label for="q${q}v${v}">${v}</label>
-                `
-            } 
-
+        for(let v = 1; v <= data_list[now]['data'].length; v++){
             txt +=`
-            </div>
+                <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
+                <label for="q${q}v${v}" class="btn-check"></label>
+                <label for="q${q}v${v}" class="text-check">&nbsp;${v}&nbsp;&nbsp;&nbsp;&nbsp;</label>
             `
-            document.getElementById("questions").innerHTML = txt
-        };
-    } else {
-        for(let q = 1; q <= questions.length; q++) {
-            txt += `
-            <p>Q${q}. ${questions[q-1]}</p>
-            <div>`
+        } 
 
-            for(let v = 1; v <= data_list[now]['data'].length; v++){
-                txt +=`
-                    <input type="radio" id="q${q}v${v}" name="Q${q}" value="${v}" class="radio-container"/>
-                    <label for="q${q}v${v}">${v}</label>
-                `
-            } 
-
-            txt +=`
-            </div>
-            `
-            document.getElementById("questions").innerHTML = txt
-        }
+        txt +=`
+        </div>
+        `
+        document.getElementById("questions").innerHTML = txt
     }
 }
 
