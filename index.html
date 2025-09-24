@@ -41,8 +41,8 @@
         now = 0
 
         questions = [
-            "Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?",
-            "Which version looks most visually appealing as a voxel art character, like something you might see in Minecraft or a stylized game?"
+    "Which voxel art version most clearly and prominently represents abstract details, such as facial features, clothing, and textures?",
+    "Which version looks most visually appealing as a voxel art character, like something you might see in Minecraft or a stylized game?"
         ]
         num_of_questions = questions.length
         
@@ -98,15 +98,27 @@
         obj_title = "Voxel"
         obj_width = 160
         element_type = "image" // video / image
-        for(let i=1; i<=10; i++) {
+        for(let i=1; i<=35; i++) {
             
             data_list.push({
                 "name": `${i}`,
                 "input": `data/${i}/input.png`,
                 "data": [
                     {
-                        "url": `data/${i}/no.png`,
-                        "value": "no"
+                        "url": `data/${i}/in2n.png`,
+                        "value": "in2n"
+                    },
+                      {
+                        "url": `data/${i}/pixel.png`,
+                        "value": "pixel"
+                    },
+                      {
+                        "url": `data/${i}/voxe.png`,
+                        "value": "voxe"
+                    },
+                      {
+                        "url": `data/${i}/blen.png`,
+                        "value": "blen"
                     },
                     {
                         "url": `data/${i}/ours.png`,
